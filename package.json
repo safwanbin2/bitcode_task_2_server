@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts"
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build:db": "npx prisma migrate dev"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +17,8 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "http-status": "^1.7.4",
-    "ts-node-dev": "^2.0.0"
+    "ts-node-dev": "^2.0.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
