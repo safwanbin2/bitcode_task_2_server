@@ -6,3 +6,48 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  user_phone String @id
+  name String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // realtions
+  purchase Purchase[]
+
+
+  @@map("users")
+}
+
+model Product {
+  product_code String @id
+  product_name String
+  product_price Float
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // relation
+  purchase Purchase[]
+
+  @@map("products")
+}
+
+model Purchase {
+  order_no Int @id @default(autoincrement())
+  purchase_quantity Int
+
+  created_at DateTime @default(now())
+
+  // fk
+  user_phone String
+  product_code String
+
+  // relations
+  user User @relation(fields: [user_phone], references: [user_phone])
+  product Product @relation(fields: [product_code], references: [product_code])
+
+  @@map("purchases")
+}
