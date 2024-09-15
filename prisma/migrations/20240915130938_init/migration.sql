@@ -23,6 +23,7 @@ CREATE TABLE "products" (
 CREATE TABLE "purchases" (
     "order_no" SERIAL NOT NULL,
     "purchase_quantity" INTEGER NOT NULL,
+    "total" DOUBLE PRECISION NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "user_phone" TEXT NOT NULL,
     "product_code" TEXT NOT NULL,
