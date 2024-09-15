@@ -38,6 +38,7 @@ model Product {
 model Purchase {
   order_no Int @id @default(autoincrement())
   purchase_quantity Int
+  total Float
 
   created_at DateTime @default(now())
 
