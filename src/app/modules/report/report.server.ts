@@ -71,7 +71,7 @@ const generateReport = async () => {
     });
   }
 
-  const users = await prisma.purchase.findMany({
+  const purchases = await prisma.purchase.findMany({
     orderBy: {
       total: "desc",
     },
@@ -81,9 +81,39 @@ const generateReport = async () => {
     },
   });
 
-  const totalPrice = await prisma.purchase.aggregate({ _sum: { total: true } });
+  // ? Another approach to retreive the report
+  // const users = await prisma.user.findMany({
+  //   include: {
+  //     purchase: {
+  //       orderBy: {
+  //         total: "desc",
+  //       },
+  //       include: {
+  //         product: true,
+  //       },
+  //     },
+  //   },
+  // });
 
-  return { users, totalPrice };
+  const totalData = await prisma.purchase.aggregate({
+    _sum: {
+      total: true,
+      purchase_quantity: true,
+    },
+  });
+
+  const totalPrice = await prisma.product.aggregate({
+    _sum: {
+      product_price: true,
+    },
+  });
+
+  return {
+    purchases,
+    totalPurchasePrice: totalData?._sum?.total,
+    totalPurchaseQuantity: totalData?._sum?.purchase_quantity,
+    totalPrice: totalPrice?._sum?.product_price,
+  };
 };
 
 export const ReportService = {
