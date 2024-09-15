@@ -19,8 +19,8 @@ const generateReport = async () => {
       purchase_quantity,
     } = purchase ?? {};
 
-    const insertionResult = await prisma.$transaction(async (tx) => {
-      const userResult = await tx.user.upsert({
+    await prisma.$transaction(async (tx) => {
+      await tx.user.upsert({
         where: {
           user_phone,
         },
@@ -33,7 +33,7 @@ const generateReport = async () => {
         },
       });
 
-      const productResult = await tx.product.upsert({
+      await tx.product.upsert({
         where: {
           product_code,
         },
@@ -48,7 +48,7 @@ const generateReport = async () => {
         },
       });
 
-      const purchaseResult = await tx.purchase.upsert({
+      await tx.purchase.upsert({
         where: {
           order_no,
         },
@@ -71,7 +71,19 @@ const generateReport = async () => {
     });
   }
 
-  return purchaseData;
+  const users = await prisma.purchase.findMany({
+    orderBy: {
+      total: "desc",
+    },
+    include: {
+      product: true,
+      user: true,
+    },
+  });
+
+  const totalPrice = await prisma.purchase.aggregate({ _sum: { total: true } });
+
+  return { users, totalPrice };
 };
 
 export const ReportService = {
